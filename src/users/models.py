@@ -4,26 +4,24 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True, verbose_name='Номер телефона')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
 
 
-class Customer(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='customer')
+class Customer(CustomUser):
 
     class Meta:
         verbose_name = 'Заказчик'
         verbose_name_plural = 'Заказчики'
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
     def __repr__(self):
         return f'{self.__class__.__name__}(id={self.id})'
 
 
-class Contractor(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='contractor')
+class Contractor(CustomUser):
     exprience = models.PositiveSmallIntegerField(verbose_name='Опыт работы')
 
     class Meta:
@@ -31,19 +29,19 @@ class Contractor(models.Model):
         verbose_name_plural = 'Исполнители'
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
     def __repr__(self):
         return f'{self.__class__.__name__}(id={self.id})'
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders', verbose_name='Заказчик')
     title = models.CharField(max_length=255, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
 
     class Meta:
         ordering = ['-created_at']
@@ -64,11 +62,11 @@ class Order(models.Model):
 
 
 class Response(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='responses')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='responses', verbose_name='Заказ')
     contractor = models.ForeignKey(Contractor, on_delete=models.CASCADE, related_name='responses')
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    message = models.TextField(verbose_name='Сообщение')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
 
     class Meta:
         ordering = ['-created_at']
