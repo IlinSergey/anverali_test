@@ -10,6 +10,8 @@ class CustomUser(AbstractUser):
 
 class Customer(CustomUser):
 
+    is_customer = models.BooleanField(default=True, verbose_name='Заказчик')
+
     class Meta:
         verbose_name = 'Заказчик'
         verbose_name_plural = 'Заказчики'
@@ -23,6 +25,7 @@ class Customer(CustomUser):
 
 class Contractor(CustomUser):
     exprience = models.PositiveSmallIntegerField(verbose_name='Опыт работы')
+    is_contractor = models.BooleanField(default=True, verbose_name='Исполнитель')
 
     class Meta:
         verbose_name = 'Исполнитель'

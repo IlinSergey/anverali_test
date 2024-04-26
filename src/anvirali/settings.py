@@ -37,6 +37,7 @@ ALLOWED_HOSTS: list[str] = []
 # Application definition
 
 INSTALLED_APPS = [
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'users',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +116,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.CustomerBackend',
+    'users.backends.ContractorBackend',
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -144,3 +150,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+LOGIN_REDIRECT_URL = 'users:index'
+LOGOUT_REDIRECT_URL = 'users:index'
+LOGIN_URL = 'users:login'
+LOGOUT_URL = 'users:logout'
