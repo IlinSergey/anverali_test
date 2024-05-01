@@ -151,7 +151,7 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-LOGIN_REDIRECT_URL = 'users:index'
-LOGOUT_REDIRECT_URL = 'users:index'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
 LOGIN_URL = 'users:login'
 LOGOUT_URL = 'users:logout'

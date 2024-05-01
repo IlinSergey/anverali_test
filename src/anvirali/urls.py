@@ -26,7 +26,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('add_order/', views.OrderCreate.as_view(), name='add_order'),
     path('', views.IndexView.as_view(), name='index'),
-    path('orders/<int:order_id>/', views.OrderDetailView.as_view(), name='order_detail'),
+    path('orders/<slug:order_slug>/', views.OrderDetailView.as_view(), name='order_detail'),
 
 ]
 

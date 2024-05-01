@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from transliterate import slugify
+
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True, verbose_name='Номер телефона')
@@ -50,6 +52,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
     is_active = models.BooleanField(default=True, verbose_name='Активен')
+    slug = models.SlugField(max_length=255, unique=True, verbose_name='URL')
 
     objects = models.Manager()
     active = IsOrderActive()
@@ -69,7 +72,12 @@ class Order(models.Model):
         return f'{self.__class__.__name__}(id={self.id}, title={self.title})'
 
     def get_absolute_url(self):
-        return f'/orders/{self.id}/'
+        return f'/orders/{self.slug}/'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 
 class Response(models.Model):

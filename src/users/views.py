@@ -1,6 +1,6 @@
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views import View
@@ -11,25 +11,27 @@ from .forms import (ContractorRegistrationForm, CustomerRegistrationForm,
 from .models import Order
 
 
-@login_required
-def view_index(request: HttpRequest) -> HttpResponse:
-    orders = Order.active.all()
-    return render(request, 'main/index.html', {'orders': orders})
-
-
 class IndexView(LoginRequiredMixin, View):
     template_name = 'main/index.html'
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        orders = Order.active.all()
+        orders_list = Order.active.all()
+        paginator = Paginator(orders_list, 10)
+        page_number = request.GET.get('page', 1)
+        try:
+            orders = paginator.get_page(page_number)
+        except PageNotAnInteger:
+            orders = paginator.get_page(1)
+        except EmptyPage:
+            orders = paginator.get_page(paginator.num_pages)
         return render(request, self.template_name, {'orders': orders})
 
 
 class OrderDetailView(LoginRequiredMixin, View):
     template_name = 'main/order_detail.html'
 
-    def get(self, request: HttpRequest, order_id: int) -> HttpResponse:
-        order = get_object_or_404(Order.active.select_related('customer'), id=order_id)
+    def get(self, request: HttpRequest, order_slug: str) -> HttpResponse:
+        order = get_object_or_404(Order.active.select_related('customer'), slug=order_slug)
         return render(request, self.template_name, {'order': order})
 
 
