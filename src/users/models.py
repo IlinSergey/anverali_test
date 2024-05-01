@@ -82,7 +82,8 @@ class Order(models.Model):
 
 class Response(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='responses', verbose_name='Заказ')
-    contractor = models.ForeignKey(Contractor, on_delete=models.CASCADE, related_name='responses')
+    contractor = models.ForeignKey(Contractor, on_delete=models.CASCADE,
+                                   related_name='responses', verbose_name='Исполнитель')
     message = models.TextField(verbose_name='Сообщение')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')

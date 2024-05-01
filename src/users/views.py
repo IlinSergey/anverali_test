@@ -1,3 +1,4 @@
+from typing import Any
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -85,6 +86,11 @@ class OrderCreateView(LoginRequiredMixin, View):
     redirect_template_name = 'main/order_done.html'
     not_allowed_template_name = 'main/not_allowed_order.html'
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not hasattr(request.user, 'customer'):
+            return render(request, self.not_allowed_template_name)
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request: HttpRequest) -> HttpResponse:
         order_form = OrderForm()
         return render(request, self.template_name, {'order_form': order_form})
@@ -106,6 +112,12 @@ class OrderEditView(LoginRequiredMixin, UpdateView):
     form_class = OrderEditForm
     template_name = 'main/order_edit.html'
     success_url = 'order_detail'
+    not_allowed_template_name = 'main/not_allowed.html'
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not hasattr(request.user, 'customer'):
+            return render(request, self.not_allowed_template_name)
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self) -> str:
         return reverse(self.success_url, kwargs={'order_slug': self.object.slug})
@@ -119,6 +131,11 @@ class ResponseAddView(View):
     template_name = ''
     redirect_template_name = 'main/response_done.html'
     not_allowed_template_name = 'main/not_allowed_response.html'
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not hasattr(request.user, 'contractor'):
+            return render(request, self.not_allowed_template_name)
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request: HttpRequest, order_id: int) -> HttpResponse:
         if hasattr(request.user, 'contractor'):
@@ -139,6 +156,12 @@ class ResponseAddView(View):
 class CustomerPersonalCabinetView(LoginRequiredMixin, View):
     login_url = 'users:login'
     template_name = 'users/customer_personal_cabinet.html'
+    not_allowed_template_name = 'main/not_allowed.html'
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not hasattr(request.user, 'customer'):
+            return render(request, self.not_allowed_template_name)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest) -> HttpResponse:
         orders = Order.objects.select_related('customer').filter(customer=request.user)
@@ -148,6 +171,12 @@ class CustomerPersonalCabinetView(LoginRequiredMixin, View):
 class ContractorPersonalCabinetView(LoginRequiredMixin, View):
     login_url = 'users:login'
     template_name = 'users/contractor_personal_cabinet.html'
+    not_allowed_template_name = 'main/not_allowed.html'
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if not hasattr(request.user, 'contractor'):
+            return render(request, self.not_allowed_template_name)
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest) -> HttpResponse:
         responses = Response.objects.filter(contractor=request.user)

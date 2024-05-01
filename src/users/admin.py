@@ -12,7 +12,7 @@ admin.site.unregister(Group)
 class CustomerAdmin(UserAdmin):
     list_display = ('username', 'password', 'first_name',
                     'last_name', 'email', 'phone_number', 'is_customer')
-    list_filter = ('created_at',)
+    list_filter = ('created_at', 'username')
     search_fields = ('username', 'first_name', 'last_name')
 
 
@@ -28,7 +28,7 @@ class ContractorAdmin(UserAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'customer', 'is_active')
     list_filter = ('is_active', 'created_at', 'customer')
-    search_fields = ('title',)
+    search_fields = ('title', 'customer')
 
 
 @admin.register(Response)
