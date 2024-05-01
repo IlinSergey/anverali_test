@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Новый заказ{% endblock %}
+
+{% block content %}
+    <h1>Новый заказ</h1>
+    <form method="post">
+        {{ order_form.as_p }}
+        {% csrf_token %}
+    <p><input type="submit" value="Создать"></p>
+    </form>
+{% endblock %}

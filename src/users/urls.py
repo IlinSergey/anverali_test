@@ -10,6 +10,4 @@ urlpatterns = [
     path('logout/', views.SignedOutView.as_view(), name='logout'),
     path('register_customer/', views.register_customer, name='register_customer'),
     path('register_contractor/', views.register_contractor, name='register_contractor'),
-
-    path('index/', views.view_index, name='index'),
 ]

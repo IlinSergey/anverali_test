@@ -19,9 +19,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from users import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls', namespace='users')),
+    path('add_order/', views.OrderCreate.as_view(), name='add_order'),
+    path('', views.IndexView.as_view(), name='index'),
+    path('orders/<int:order_id>/', views.OrderDetailView.as_view(), name='order_detail'),
+
 ]
 
 if settings.DEBUG:

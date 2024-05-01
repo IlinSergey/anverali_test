@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ order.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ order.title }}</h1>
+    <p>{{ order.description }}</p>
+    <p>{{ order.created_at }} заказчиком {{ order.customer }}</p>
+
+{% endblock %}

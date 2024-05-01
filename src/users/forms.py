@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Contractor, Customer
+from .models import Contractor, Customer, Order
 
 
 class ContractorRegistrationForm(forms.ModelForm):
@@ -35,3 +35,9 @@ class CustomerRegistrationForm(forms.ModelForm):
         if password and password2 and password != password2:
             raise forms.ValidationError('Пароли не совпадают')
         return password2
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('title', 'description')
