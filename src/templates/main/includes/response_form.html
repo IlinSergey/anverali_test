@@ -1,0 +1,6 @@
+<h2>Добавить Отклик</h2>
+<form action="{% url 'order_response' order.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p><input type="submit" value="Добавить отклик"></p>
+</form>

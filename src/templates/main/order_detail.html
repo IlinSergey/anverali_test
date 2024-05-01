@@ -3,8 +3,39 @@
 {% block title %}{{ order.title }}{% endblock %}
 
 {% block content %}
+<div class="order-detail">
     <h1>{{ order.title }}</h1>
     <p>{{ order.description }}</p>
     <p>{{ order.created_at }} заказчиком {{ order.customer }}</p>
+</div>
+
+<div>
+    {% with responses.count as responses_count %}
+    <h2>
+    {{ responses_count }} {% if responses_count == 1 %}отклик{% else %}отклика{% endif %}
+    </h2>
+    {% endwith %}
+
+    {% for response in responses %}
+    <div>
+        <p>Исполнитель: {{ response.contractor }}</p>
+        <p>Сообщение: {{ response.message }}</p>
+    </div>
+    {% if not forloop.last %}
+    <hr>
+    {% endif %}
+    {% empty %}
+    <p>Нет откликов</p>
+    {% endfor %}
+</div>
+    {% if request.user.is_authenticated %}
+        {% if is_contractor %}
+            {% if not user_responsed %}
+                {% include 'main/includes/response_form.html' %}
+            {% else %}
+                <p>Вы уже откликнулись на этот заказ</p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
 {% endblock %}

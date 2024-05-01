@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление отклика{% endblock %}
+
+{% block content %}
+    {% if response %}
+        <h2>Ваш отклик был добавлен</h2>
+        <p><a href="{% url 'order_detail' order.slug %}">Вернуться к заказу</a></p>
+    {% else %}
+        {% include 'main/includes/response_form.html' %}
+    {% endif %}
+{% endblock %}

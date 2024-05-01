@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Contractor, Customer, Order
+from .models import Contractor, Customer, Order, Response
 
 
 class ContractorRegistrationForm(forms.ModelForm):
@@ -41,3 +41,12 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ('title', 'description')
+
+
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = ('message',)
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 3, 'cols': 40}),
+        }
