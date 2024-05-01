@@ -6,7 +6,11 @@
 <div class="order-detail">
     <h1>{{ order.title }}</h1>
     <p>{{ order.description }}</p>
-    <p>{{ order.created_at }} заказчиком {{ order.customer }}</p>
+    <p>Создан: {{ order.created_at }}</p>
+    <p>{% if order.is_active %} Активен {% else %} Завершен: {{ order.updated_at }} {% endif %} </p>
+    {% if user.is_authenticated %}
+    <p><a href="{% url 'order_edit' order.slug %}">Редактировать</a></p>
+    {% endif %}
 </div>
 
 <div>
@@ -18,8 +22,10 @@
 
     {% for response in responses %}
     <div>
-        <p>Исполнитель: {{ response.contractor }}</p>
-        <p>Сообщение: {{ response.message }}</p>
+        <p>Исполнитель: {{ response.contractor }} с опытом: {{ response.contractor.exprience }} лет. <br>
+        Сообщение: {{ response.message }}<br>
+        Телефон: {{ response.contractor.phone_number }}
+        </p>
     </div>
     {% if not forloop.last %}
     <hr>

@@ -3,12 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
+from django.views.generic.edit import UpdateView
 
 from .forms import (ContractorRegistrationForm, CustomerRegistrationForm,
-                    OrderForm, ResponseForm)
-from .models import Order
+                    OrderEditForm, OrderForm, ResponseForm)
+from .models import Order, Response
 
 
 class IndexView(LoginRequiredMixin, View):
@@ -31,7 +33,7 @@ class OrderDetailView(LoginRequiredMixin, View):
     template_name = 'main/order_detail.html'
 
     def get(self, request: HttpRequest, order_slug: str) -> HttpResponse:
-        order = get_object_or_404(Order.active.select_related('customer'), slug=order_slug)
+        order = get_object_or_404(Order.objects.select_related('customer'), slug=order_slug)
         responses = order.responses.all().select_related('contractor').order_by('-created_at')
         user_responsed = False
         is_contractor = hasattr(request.user, 'contractor')
@@ -99,6 +101,19 @@ class OrderCreateView(LoginRequiredMixin, View):
         return render(request, self.not_allowed_template_name)
 
 
+class OrderEditView(LoginRequiredMixin, UpdateView):
+    model = Order
+    form_class = OrderEditForm
+    template_name = 'main/order_edit.html'
+    success_url = 'order_detail'
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'order_slug': self.object.slug})
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Order, slug=self.kwargs['order_slug'])
+
+
 class ResponseAddView(View):
     login_url = 'users:login'
     template_name = ''
@@ -119,3 +134,21 @@ class ResponseAddView(View):
             return render(request, self.template_name, {'response_form': response_form,
                                                         'order': order})
         return render(request, self.not_allowed_template_name)
+
+
+class CustomerPersonalCabinetView(LoginRequiredMixin, View):
+    login_url = 'users:login'
+    template_name = 'users/customer_personal_cabinet.html'
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        orders = Order.objects.select_related('customer').filter(customer=request.user)
+        return render(request, self.template_name, {'orders': orders})
+
+
+class ContractorPersonalCabinetView(LoginRequiredMixin, View):
+    login_url = 'users:login'
+    template_name = 'users/contractor_personal_cabinet.html'
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        responses = Response.objects.filter(contractor=request.user)
+        return render(request, self.template_name, {'responses': responses})

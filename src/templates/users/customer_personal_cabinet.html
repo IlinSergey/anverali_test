@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+    <h1> Мои заказы</h1>
+    {% for order in orders %}
+        <p><a href="{{ order.get_absolute_url }}">{{ order.title }}</a>  {{ order.created_at }}</p>
+    {% endfor %}
+{% endblock %}

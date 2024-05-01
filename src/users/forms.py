@@ -43,6 +43,12 @@ class OrderForm(forms.ModelForm):
         fields = ('title', 'description')
 
 
+class OrderEditForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('title', 'description', 'is_active')
+
+
 class ResponseForm(forms.ModelForm):
     class Meta:
         model = Response

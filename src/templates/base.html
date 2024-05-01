@@ -18,9 +18,20 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         {% if request.user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
+                            {% if user.customer %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:customer_personal_cabinet' %}">Личный кабинет</a>
+                            </li>
+                            {% elif user.contractor %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'users:contractor_personal_cabinet' %}">Личный кабинет</a>
+                            </li>
+                            {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'index' %}">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
                         </li>
                         {% else %}
                         <li class="nav-item">

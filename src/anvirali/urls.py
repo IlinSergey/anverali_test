@@ -27,8 +27,8 @@ urlpatterns = [
     path('add_order/', views.OrderCreateView.as_view(), name='add_order'),
     path('', views.IndexView.as_view(), name='index'),
     path('orders/<slug:order_slug>/', views.OrderDetailView.as_view(), name='order_detail'),
-    path('<int:order_id>/response/', views.ResponseAddView.as_view(), name='order_response')
-
+    path('<int:order_id>/response/', views.ResponseAddView.as_view(), name='order_response'),
+    path('orders/<slug:order_slug>/edit/', views.OrderEditView.as_view(), name='order_edit'),
 ]
 
 if settings.DEBUG:
