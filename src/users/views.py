@@ -98,7 +98,7 @@ class OrderCreateView(LoginRequiredMixin, View):
 
     def post(self, request: HttpRequest) -> HttpResponse:
         if hasattr(request.user, 'customer'):
-            order_form = OrderForm(request.POST)
+            order_form = OrderForm(request.POST, request=request)
             if order_form.is_valid():
                 new_order = order_form.save(commit=False)
                 new_order.customer = request.user.customer

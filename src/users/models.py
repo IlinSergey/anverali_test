@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.utils.text import slugify as django_slugify
+from langdetect import detect
 from transliterate import slugify
 
 
@@ -52,7 +53,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
     is_active = models.BooleanField(default=True, verbose_name='Активен')
-    slug = models.SlugField(max_length=255, unique=True, verbose_name='URL')
+    slug = models.SlugField(max_length=255, unique=True, verbose_name='URL', blank=True, null=True)
 
     objects = models.Manager()
     active = IsOrderActive()
@@ -64,6 +65,7 @@ class Order(models.Model):
         indexes = [
             models.Index(fields=['-created_at']),
         ]
+        unique_together = ('customer', 'title')
 
     def __str__(self):
         return self.title
@@ -76,7 +78,18 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            title_lang = detect(self.title)
+            username_lang = detect(self.customer.username)
+            if title_lang == 'ru':
+                if username_lang == 'ru':
+                    self.slug = f'{slugify(self.customer.username)}-{slugify(self.title)}'
+                else:
+                    self.slug = f'{django_slugify(self.customer.username)}-{slugify(self.title)}'
+            else:
+                if username_lang == 'ru':
+                    self.slug = f'{slugify(self.customer.username)}-{django_slugify(self.title)}'
+                else:
+                    self.slug = f'{django_slugify(self.customer.username)}-{django_slugify(self.title)}'
         super().save(*args, **kwargs)
 
 

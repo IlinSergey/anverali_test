@@ -6,8 +6,8 @@ from pytest_django.asserts import assertTemplateUsed
 class TestOrderDetailView:
 
     @pytest.mark.parametrize('order_slug', [
-        'telegram-bot',
-        'django-site'
+        'test_customer_user-telegram-bot',
+        'test_customer_user-django-site'
         ])
     def test__order_detail_view__success(self, client, customer_user, order_slug):
         client.force_login(customer_user)

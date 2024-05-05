@@ -38,9 +38,21 @@ class CustomerRegistrationForm(forms.ModelForm):
 
 
 class OrderForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Order
         fields = ('title', 'description')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        title = cleaned_data.get('title')
+        user = self.request.user
+        if Order.objects.filter(title=title, customer=user).exists():
+            raise forms.ValidationError('Заказ с таким названием уже существует.')
+        return cleaned_data
 
 
 class OrderEditForm(forms.ModelForm):
