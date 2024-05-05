@@ -129,7 +129,7 @@ class OrderEditView(LoginRequiredMixin, UpdateView):
 
 class ResponseAddView(View):
     login_url = 'users:login'
-    template_name = ''
+    template_name = 'main/response.html'
     redirect_template_name = 'main/response_done.html'
     not_allowed_template_name = 'main/not_allowed_response.html'
 
