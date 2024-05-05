@@ -16,6 +16,7 @@ flake8-variables-names==0.0.6
 identify==2.5.36
 iniconfig==2.0.0
 isort==5.13.2
+langdetect==1.0.9
 mccabe==0.7.0
 mypy==1.8.0
 mypy-extensions==1.0.0

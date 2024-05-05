@@ -9,11 +9,18 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB_NAME}
-    restart: on-failure
-    ports:
-      - "5433:5432"
     volumes:
       - /postgres-data:/var/lib/postgresql/data
+
+  web:
+    depends_on:
+      - postgres-db
+    build: .
+    command: python src/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
 
 volumes:
   postgres-data:
