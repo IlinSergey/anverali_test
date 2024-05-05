@@ -22,6 +22,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'users:customer_personal_cabinet' %}">Личный кабинет</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'add_order' %}">Добавить заказ</a>
+                            </li>
                             {% elif user.contractor %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'users:contractor_personal_cabinet' %}">Личный кабинет</a>
