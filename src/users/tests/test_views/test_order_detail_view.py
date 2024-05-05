@@ -6,8 +6,8 @@ from pytest_django.asserts import assertTemplateUsed
 class TestOrderDetailView:
 
     @pytest.mark.parametrize('order_slug', [
-        'test_customer_user-telegram-bot',
-        'test_customer_user-django-site'
+        'testcustomer-telegram',
+        'testcustomer-django-site'
         ])
     def test__order_detail_view__success(self, client, customer_user, order_slug):
         client.force_login(customer_user)
@@ -21,10 +21,10 @@ class TestOrderDetailView:
         assert response.status_code == 404
 
     def test__order_detail_view__not_logged(self, client):
-        response = client.get('/orders/telegram-bot/')
+        response = client.get('/orders/testcustomer-telegram/')
         assert response.status_code == 302
 
     def test__order_detail_view__method_not_allowed(self, client, contractor_user):
         client.force_login(contractor_user)
-        response = client.post('/orders/telegram-bot/')
+        response = client.post('/orders/testcustomer-telegram/')
         assert response.status_code == 405
